@@ -5,7 +5,7 @@
 
 use strict; use warnings;
 
-my $touchpd = "elan-touchpad";
+my $touchpd = &get_tpd;
 my $tpd_status = &tpd_status;
 
 my $status_error = 
@@ -13,6 +13,20 @@ my $status_error =
 
 &toggle_touchpd;
 
+
+sub get_tpd {
+    if (open my $th, "-|", "hyprctl devices | grep -A1 'Mouse'") {
+        <$th>;
+        while (my $t = <$th>) {
+            if ($t =~ /^\s+(?<tpd>.+)$/) {
+                my $tpd = $+{tpd};
+                close $th;
+                return $tpd
+            }
+        }
+        close $th
+    } else { die "ERROR: Failed to get touchpad device\n" }
+}
 
 sub tpd_status {
     my $tpd_file;

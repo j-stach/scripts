@@ -4,7 +4,12 @@
 
 use strict; use warnings; 
 
-sub mic_toggle { qx/pactl set-source-mute \@DEFAULT_SOURCE@ toggle/ }
+#&mic_toggle;
+&mic_status;
+
+sub mic_toggle { 
+    system('pactl', 'set-source-mute', '@DEFAULT_SOURCE@', 'toggle'); 
+}
 
 sub mic_source { system("pactl", "get-default-source") }
 my $sauce_error = "Can't sauce your mic bruh that's my b"; 
@@ -26,7 +31,4 @@ sub mic_status {
 
     close $src
 }
-
-&mic_toggle;
-&mic_status;
 

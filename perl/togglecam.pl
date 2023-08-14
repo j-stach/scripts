@@ -1,5 +1,7 @@
 
 # Script to disable/enable webcam by unloading/loading kernel module
+# Causes kernel segfaults if used too often, 
+# better to go with the "webcam tape" until that's sorted out
 
 use strict; use warnings;
 
