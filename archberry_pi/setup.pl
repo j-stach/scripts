@@ -28,6 +28,9 @@ open my $fdisk, "|-", "fdisk $device" or die "Unable to open fdisk: $!";
 print $fdisk $commands;
 close $fdisk or die "fdisk failed to close: $!";
 
+system "sync";
+sleep 5;
+
 my $boot = $device."p1"; my $root = $device."p2";
 system("mkfs.vfat $boot") or die "mkfs failed to format $boot: $!"; 
 system("mkfs.ext4 $root") or die "mkfs failed to format $root: $!"; 
