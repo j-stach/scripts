@@ -65,7 +65,7 @@ print "\e[34m >>> Success!\n\e[0m";
 
 print << 'FINISHED';
 Arch ARM installation finished. 
-Insert the memory card into your Raspberry Pi. Boot it up.
+Insert the memory card into your Raspberry Pi. Connect ethernet to network. Boot it up.
 The default root password is 'root', and the default user/password is 'alarm'/'alarm'.
 When you boot for the first time, remember to initialize pacman keys and get an update:
 $ pacman-key --init
