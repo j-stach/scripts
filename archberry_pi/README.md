@@ -18,25 +18,21 @@ Do not use this script as-is if `mmcblk0` is assigned to a different device. <br
 2. Using `lsblk`, ensure that the device name is `/dev/mmcblk0`.
 3. Run the install script with `sudo`: TBD -- just use wget?
 ```
-$ sudo perl path/to/archberry_pi/install.pl
+$ sudo wget -qO - <em>https://github.com/j-stach/scripts/archberry_pi/install.pl</em> | perl
 ```
 4. Then pull the SD card and insert it into the Pi.
-5. Hook-up the Pi to ethernet and power, then boot. The default root password is 'root'.
-6. The first time you boot, initialize pacman keys, update, and install wget and Perl:
+5. Connect the Pi to internet via ethernet cable, connect to power, then boot. 
+The default Arch ARM user is 'alarm' (Arch Linux ARM) and the password is 'alarm'.
+6. The first time you log in, run the setup script with sudo:
 ```
-$ pacman-key --init
-$ pacman-key --populate archlinuxarm
-$ pacman -Syu perl wget
+$ sudo wget -qO - <em>https://github.com/j-stach/scripts/archberry_pi/setup.sh</em> | bash
 ```
-7. Run the setup script with sudo:
-```
-$ TBD
-```
+7. Configure Arch as needed! Enjoy!
 
 ## Resources
 There are nuances to the ARM version when it comes to packaging software, 
-but otherwise it behaves the same as Arch Linux. <br>
-- https://wiki.archlinux.org/title/Installation_guide
+but otherwise it should behave the same as regular Arch Linux. <br>
+- https://wiki.archlinux.org
 - https://archlinuxarm.org/wiki
 
 
