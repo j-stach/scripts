@@ -30,8 +30,16 @@ my $RESET_COLOR = "\e[0m";
 
 sub main {
 # TODO Options for "no-clean" for repeat, instead of redownload
+# TODO Option for redownload
+# TODO Option for quiet/verbose
+# TODO Help
 &check_device;
+
+# TODO check for /tmp/pi
 &setup_temp_dir;
+
+print "$COLOR_BLUE>>> Downloading files...$RESET_COLOR
+This may take a few minutes...\n";
 &download_images;
 
 print "$COLOR_BLUE>>> Partitioning disk...\n$RESET_COLOR";
@@ -41,11 +49,15 @@ print "$COLOR_BLUE>>> Formatting partitions...\n$RESET_COLOR";
 &format_partitions;
 &mount_partitions;
 
-print "$COLOR_BLUE>>> Installing Arch Linux ARM...$RESET_COLOR\nThis may take a few minutes...\n";
+print "$COLOR_BLUE>>> Installing Arch Linux ARM...$RESET_COLOR
+This may take a few minutes...\n";
 &install_arch_linux;
-&replace_kernel;
 
-print "$COLOR_BLUE>>> Cleaning up temporary directories...\n$RESET_COLOR";
+# TODO Print green
+# TODO Space out print statement lines
+print "$COLOR_BLUE>>> Syncing...$RESET_COLOR
+This may take a few minutes...\n";
+# TODO Separate cleanup and sync, so that it doesn't have to download every time?
 &cleanup;
 
 print "$COLOR_BLUE>>> Success!\n$RESET_COLOR";
@@ -77,7 +89,7 @@ sub partition_device {
 ,256M,0c,
 ,,,
 COMMANDS
-    open(my $fh, '|-', "sfdisk --quiet --wipe always $DEVICE") or die "$!";
+    open(my $fh, '|-', "sfdisk --wipe always $DEVICE") or die "$!";
     print $fh $commands;
     close $fh or die "Partitioning failed: $!";
 }
