@@ -33,21 +33,21 @@ sub main {
 &setup_temp_dir;
 &download_images;
 
-print "$COLOR_BLUE>>> Partitioning disk...\n$REST_COLOR";
+print "$COLOR_BLUE>>> Partitioning disk...\n$RESET_COLOR";
 &partition_device;
 
-print "$COLOR_BLUE>>> Formatting partitions...\n$REST_COLOR";
+print "$COLOR_BLUE>>> Formatting partitions...\n$RESET_COLOR";
 &format_partitions;
 &mount_partitions;
 
-print "$COLOR_BLUE>>> Installing Arch Linux ARM...$REST_COLOR\nThis may take a few minutes...\n";
+print "$COLOR_BLUE>>> Installing Arch Linux ARM...$RESET_COLOR\nThis may take a few minutes...\n";
 &install_arch_linux;
 &replace_kernel;
 
-print "$COLOR_BLUE>>> Cleaning up temporary directories...\n$REST_COLOR";
+print "$COLOR_BLUE>>> Cleaning up temporary directories...\n$RESET_COLOR";
 &cleanup;
 
-print "$COLOR_BLUE>>> Success!\n$REST_COLOR";
+print "$COLOR_BLUE>>> Success!\n$RESET_COLOR";
 print << 'FINISHED';
 Arch ARM installation finished.
 Insert the memory card into your Raspberry Pi. Connect ethernet to network. Boot it up.
@@ -69,7 +69,7 @@ sub setup_temp_dir {
 
 sub download_images {
     system("wget -P $TEMP_DIR $IMAGE_URL") == 0 or die "$!";
-    system("wget -P $KERNEL_DIR $KERNEL_URL") == 0 or die "$!";
+    system("wget -P $KERNEL_DEPOT $KERNEL_URL") == 0 or die "$!";
 }
 
 sub partition_device {
@@ -97,7 +97,7 @@ sub mount_partitions {
 }
 
 sub install_arch_linux {
-    system("tar -xpf $TEMP_DIR/$IMAGE_TAR -C $mount") == 0 or die "$!";
+    system("tar -xpf $TEMP_DIR/$IMAGE_TAR -C $MOUNT_DIR") == 0 or die "$!";
     system("rm -rf $MOUNT_DIR/boot/*") == 0 or die "$!";
     system("tar -xf $KERNEL_DEPOT/* -C $TEMP_DIR") == 0 or die "$!";
     system("cp -rf $TEMP_DIR/boot/* $MOUNT_DIR/boot/") == 0 or die "$!";
