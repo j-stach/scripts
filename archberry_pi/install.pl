@@ -33,21 +33,21 @@ sub main {
 &setup_temp_dir;
 &download_images;
 
-print "$color>>> Partitioning disk...\n$reset";
+print "$COLOR_BLUE>>> Partitioning disk...\n$REST_COLOR";
 &partition_device;
 
-print "$color>>> Formatting partitions...\n$reset";
+print "$COLOR_BLUE>>> Formatting partitions...\n$REST_COLOR";
 &format_partitions;
 &mount_partitions;
 
-print "$color>>> Installing Arch Linux ARM...$reset\nThis may take a few minutes...\n";
+print "$COLOR_BLUE>>> Installing Arch Linux ARM...$REST_COLOR\nThis may take a few minutes...\n";
 &install_arch_linux;
 &replace_kernel;
 
-print "$color>>> Cleaning up temporary directories...\n$reset";
+print "$COLOR_BLUE>>> Cleaning up temporary directories...\n$REST_COLOR";
 &cleanup;
 
-print "$color>>> Success!\n$reset";
+print "$COLOR_BLUE>>> Success!\n$REST_COLOR";
 print << 'FINISHED';
 Arch ARM installation finished.
 Insert the memory card into your Raspberry Pi. Connect ethernet to network. Boot it up.
