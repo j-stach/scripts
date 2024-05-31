@@ -107,3 +107,5 @@ sub cleanup {
     system("sync && umount -R $MOUNT_DIR") == 0 or die "$!";
     remove_tree($TEMP_DIR);
 }
+
+main();
