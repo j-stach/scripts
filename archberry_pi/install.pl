@@ -13,73 +13,97 @@
 # BE CAREFUL!! DOUBLE-CHECK WITH `lsblk` BEFORE RUNNING THIS SCRIPT!!
 
 use strict; use warnings;
+use File::Path qw{make_path remove_tree};
 
-my $device = "/dev/mmcblk0";
-my $boot = $device."p1";
-my $root = $device."p2";
-my $mount = "/mnt/sd";
-my $temp = "/tmp/pi";
-my $image = "ArchLinuxARM-rpi-aarch64-latest.tar.gz";
-my $url = "http://os.archlinuxarm.org/os/$image";
-my $color = "\e[34m";
-my $reset = "\e[0m";
+my $DEVICE = "/dev/mmcblk0";
+my $BOOT_PARTITION = $DEVICE."p1";
+my $ROOT_PARTITION = $DEVICE."p2";
+my $MOUNT_DIR = "/mnt/sd";
+my $TEMP_DIR = "/tmp/pi";
+my $IMAGE_TAR = "ArchLinuxARM-rpi-aarch64-latest.tar.gz";
+my $IMAGE_URL = "http://os.archlinuxarm.org/os/$IMAGE_TAR";
+my $KERNEL_DEPOT = $TEMP_DIR."/linux-rpi";
+my $KERNEL_TAR = "linux-rpi-6.1.63-1-aarch64.pkg.tar.xz";
+my $KERNEL_URL = "http://mirror.archlinuxarm.org/aarch64/core/$KERNEL_TAR";
+my $COLOR_BLUE = "\e[34m";
+my $RESET_COLOR = "\e[0m";
 
-# Setup
-unless (-b $device) { die "Device '$device' could not be found." }
-# TBD: Automated check for mmcblk0 safety?
-mkdir $temp or die "Temporary directory could not be created: $!";
-system("wget -P $temp $url") == 0 or die "Download failed: $!";
+sub main {
+&check_device;
+&setup_temp_dir;
+&download_images;
 
-# Partition
 print "$color>>> Partitioning disk...\n$reset";
-my $commands = <<'END';
-,256M,0c,
-,,,
-END
-system("sfdisk --quiet --wipe always $device $commands") == 0
-    or die "Partitioning failed: $!";
+&partition_device;
 
-# Format
 print "$color>>> Formatting partitions...\n$reset";
-system("mkfs.vfat -F 32 $boot") == 0
-    or die "mkfs failed to format $boot: $!";
-my $options = "-E lazy_itable_init=0,lazy_journal_init=0";
-system("mkfs.ext4 $options -F $root") == 0
-    or die "mkfs failed to format $root: $!";
+&format_partitions;
+&mount_partitions;
 
-mkdir $mount or die "Mount directory could not be created: $!";
-system("mount $root $mount") == 0 or die "Failed to mount: $!";
-mkdir "$mount/boot" or die "Boot directory could not be created: $!";
-system("mount $boot $root/boot") == 0 or die "Failed to mount: $!";
-
-# Install
 print "$color>>> Installing Arch Linux ARM...$reset\nThis may take a few minutes...\n";
-system("tar -xpf $temp/$image -C $mount") == 0
-    or die "Failed to extract image: $!";
-system("sync") == 0 or die "Sync failed: $!";
+&install_arch_linux;
+&replace_kernel;
 
-
-system("mv ./root/boot/* boot") == 0 or die "Failed to move filesystem: $!";
-system("perl -i -pe 's/mmcblk0/mmcblk1/g' root/etc/fstab") == 0
-    or die "Failed to edit fstab: $!";
-
-# Fix
-
-
-# Cleanup
 print "$color>>> Cleaning up temporary directories...\n$reset";
-system("umount boot root") == 0 or die "Unmounting failed: $!";
-system("rm -rf ./root ./boot") == 0 or die "Directory cleanup failed: $!";
-# TODO: Clean up the Arch tarball too? Probably should?
+&cleanup;
 
 print "$color>>> Success!\n$reset";
-
 print << 'FINISHED';
-Arch ARM installation finished. 
+Arch ARM installation finished.
 Insert the memory card into your Raspberry Pi. Connect ethernet to network. Boot it up.
 The default root password is 'root', and the default user/password is 'alarm'/'alarm'.
-When you boot for the first time, remember to initialize pacman keys and get an update:
-$ pacman-key --init
-$ pacman-key --populate archlinuxarm
-$ pacman -Syu
+See the README for next steps.
 FINISHED
+
+}
+
+sub check_device {
+    -b $DEVICE or die "Device '$DEVICE' could not be found.";
+    # TBD: Automated check for mmcblk0 safety?
+}
+
+sub setup_temp_dir {
+    make_path($TEMP_DIR);
+    make_path($KERNEL_DEPOT);
+}
+
+sub download_images {
+    system("wget -P $TEMP_DIR $IMAGE_URL") == 0 or die "$!";
+    system("wget -P $KERNEL_DIR $KERNEL_URL") == 0 or die "$!";
+}
+
+sub partition_device {
+    my $commands = <<'COMMANDS';
+,256M,0c,
+,,,
+COMMANDS
+    open(my $fh, '|-', "sfdisk --quite --wipe always $DEVICE") or die "$!";
+    print $fh $commands;
+    close $fh or die "Partitioning failed: $!";
+}
+
+sub format_partitions {
+    system("mkfs.vfat -F 32 $BOOT_PARTITION") == 0 or die "$!";
+    my $options = "-E lazy_itable_init=0,lazy_journal_init=0";
+    system("mkfs.ext4 $options -F $ROOT_PARTITION") == 0 or die "$!";
+}
+
+sub mount_partitions {
+    make_path($MOUNT_DIR);
+    system("mount $ROOT_PARTITION $MOUNT_DIR") == 0 or die "$!";
+    make_path("$MOUNT_DIR/boot");
+    system("mount $BOOT_PARTITION $MOUNT_DIR/boot") == 0 or die "$!";
+    system("sync") == 0 or die "$!";
+}
+
+sub install_arch_linux {
+    system("tar -xpf $TEMP_DIR/$IMAGE_TAR -C $mount") == 0 or die "$!";
+    system("rm -rf $MOUNT_DIR/boot/*") == 0 or die "$!";
+    system("tar -xf $KERNEL_DEPOT/* -C $TEMP_DIR") == 0 or die "$!";
+    system("cp -rf $TEMP_DIR/boot/* $MOUNT_DIR/boot/") == 0 or die "$!";
+}
+
+sub cleanup {
+    system("sync && umount -R $MOUNT_DIR") == 0 or die "$!";
+    remove_tree($TEMP_DIR);
+}
