@@ -23,12 +23,13 @@ my $TEMP_DIR = "/tmp/pi";
 my $IMAGE_TAR = "ArchLinuxARM-rpi-aarch64-latest.tar.gz";
 my $IMAGE_URL = "http://os.archlinuxarm.org/os/$IMAGE_TAR";
 my $KERNEL_DEPOT = $TEMP_DIR."/linux-rpi";
-my $KERNEL_TAR = "linux-rpi-6.1.63-1-aarch64.pkg.tar.xz";
+my $KERNEL_TAR = "linux-rpi-16k-6.6.31-2-aarch64.pkg.tar.xz";
 my $KERNEL_URL = "http://mirror.archlinuxarm.org/aarch64/core/$KERNEL_TAR";
 my $COLOR_BLUE = "\e[34m";
 my $RESET_COLOR = "\e[0m";
 
 sub main {
+# TODO Options for "no-clean" for repeat, instead of redownload
 &check_device;
 &setup_temp_dir;
 &download_images;
@@ -54,7 +55,6 @@ Insert the memory card into your Raspberry Pi. Connect ethernet to network. Boot
 The default root password is 'root', and the default user/password is 'alarm'/'alarm'.
 See the README for next steps.
 FINISHED
-
 }
 
 sub check_device {
@@ -77,7 +77,7 @@ sub partition_device {
 ,256M,0c,
 ,,,
 COMMANDS
-    open(my $fh, '|-', "sfdisk --quite --wipe always $DEVICE") or die "$!";
+    open(my $fh, '|-', "sfdisk --quiet --wipe always $DEVICE") or die "$!";
     print $fh $commands;
     close $fh or die "Partitioning failed: $!";
 }
@@ -99,7 +99,7 @@ sub mount_partitions {
 sub install_arch_linux {
     system("tar -xpf $TEMP_DIR/$IMAGE_TAR -C $MOUNT_DIR") == 0 or die "$!";
     system("rm -rf $MOUNT_DIR/boot/*") == 0 or die "$!";
-    system("tar -xf $KERNEL_DEPOT/* -C $TEMP_DIR") == 0 or die "$!";
+    system("tar -xpf $KERNEL_DEPOT/$KERNEL_TAR -C $TEMP_DIR") == 0 or die "$!";
     system("cp -rf $TEMP_DIR/boot/* $MOUNT_DIR/boot/") == 0 or die "$!";
 }
 
