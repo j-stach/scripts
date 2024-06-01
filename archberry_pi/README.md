@@ -23,11 +23,15 @@ $ sudo wget -qO - <em>https://github.com/j-stach/scripts/archberry_pi/install.pl
 4. Then pull the SD card and insert it into the Pi.
 5. Connect the Pi to internet via ethernet cable, connect to power, then boot. 
 The default Arch ARM user is 'alarm' (Arch Linux ARM) and the password is 'alarm'.
-6. The first time you log in, run the setup script with sudo:
+6. The first time you log in, run the following as root to clean up the install:
 ```
-$ sudo wget -qO - <em>https://github.com/j-stach/scripts/archberry_pi/setup.sh</em> | bash
+pacman-key --init
+pacman-key --populate archlinuxarm
+pacman -R linux-aarch64 uboot-raspberrypi
+pacman -Syu --overwrite "/boot/*" linux-rpi
+reboot
 ```
-7. Configure Arch as needed! Enjoy!
+7. Configure as needed! Enjoy!
 
 ## Resources
 There are nuances to the ARM version when it comes to packaging software, 
