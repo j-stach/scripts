@@ -3,8 +3,6 @@
 Scripts I use for quickly setting up Arch Linux for Raspberry Pi. <br>
 `install.pl` partitions & formats a micro-SD card, 
 then installs the latest version of Arch Linux ARM on it. <br>
-`setup.pl` is to be run on the Raspberry Pi the first time it boots,
-and will walk you through the remaining steps to set up the OS. <br>
 
 **WARNING:** Script expects the memory card to be recognized as `/dev/mmcblk0`,
 and will partition and overwrite the device with that name. <br>
