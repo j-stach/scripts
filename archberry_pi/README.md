@@ -5,9 +5,9 @@ Scripts I use for quickly setting up Arch Linux for Raspberry Pi. <br>
 then installs the latest version of Arch Linux ARM on it. <br>
 
 **WARNING:** Script expects the memory card to be recognized as `/dev/mmcblk0`,
-and will partition and overwrite the device with that name. <br>
+and will partition and overwrite the device with that name.
 Double-check using `lsblk` to ensure the SD card is correctly-named. 
-Do not use this script as-is if `mmcblk0` is assigned to a different device. <br>
+Do not use this script as-is if `mmcblk0` is assigned to a different device. 
 (For example, running this script on my Chromebook would overwrite the filesystem!) <br>
 
 
