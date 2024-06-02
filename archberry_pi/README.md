@@ -3,8 +3,6 @@
 Scripts I use for quickly setting up Arch Linux for Raspberry Pi. <br>
 `install.pl` partitions & formats a micro-SD card, 
 then installs the latest version of Arch Linux ARM on it. <br>
-`setup.pl` is to be run on the Raspberry Pi the first time it boots,
-and will walk you through the remaining steps to set up the OS. <br>
 
 **WARNING:** Script expects the memory card to be recognized as `/dev/mmcblk0`,
 and will partition and overwrite the device with that name. <br>
@@ -23,6 +21,7 @@ $ sudo wget -qO - <em>https://github.com/j-stach/scripts/archberry_pi/install.pl
 4. Then pull the SD card and insert it into the Pi.
 5. Connect the Pi to internet via ethernet cable, connect to power, then boot. 
 The default Arch ARM user is 'alarm' (Arch Linux ARM) and the password is 'alarm'.
+<<<<<<< HEAD
 The default root password is 'root'.
 6. The first time you log in, run the following commands as root:
 ```
@@ -38,6 +37,17 @@ The default root password is 'root'.
 Uncomment your UTF zones, then run `# locale-gen`.
 8. Configure the rest as needed. Remember to change your root password with `$ passwd` 
 and to set up a firewall if you are connecting to a network. Enjoy!
+=======
+6. The first time you log in, run the following as root to clean up the install:
+```
+pacman-key --init
+pacman-key --populate archlinuxarm
+pacman -R linux-aarch64 uboot-raspberrypi
+pacman -Syu --overwrite "/boot/*" linux-rpi
+reboot
+```
+7. Configure as needed! Enjoy!
+>>>>>>> 80ad26a45f62987c67a5b85605c505a5e34ac993
 
 ## Resources
 There are nuances to the ARM version when it comes to packaging software, 
