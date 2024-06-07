@@ -28,7 +28,7 @@ The default root password is 'root'.
 # pacman-key --populate archlinuxarm
 # pacman -R linux-aarch64 uboot-raspberrypi
 # pacman -Syu --overwrite "/boot/*" linux-rpi
-# timedatectl set-timezone /YourCountry/YourZone
+# timedatectl set-timezone YourRegion/YourZone
 # mkinitcpio -P
 # reboot
 ```
