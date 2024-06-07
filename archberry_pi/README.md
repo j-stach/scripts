@@ -32,7 +32,7 @@ The default root password is 'root'.
 # mkinitcpio -P
 # reboot
 ```
-7. Boot again, and open `/etc/locale.conf` in your preferred text editor. 
+7. Boot again, and open `/etc/locale.gen` in your preferred text editor. 
 Uncomment your UTF zones, then run `# locale-gen`.
 8. Configure the rest as needed. Remember to change your root password with `# passwd` 
 and to set up a firewall if you are connecting to a network. Enjoy!
