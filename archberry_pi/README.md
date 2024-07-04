@@ -1,6 +1,6 @@
 
 # archberry_pi
-Scripts I use for quickly setting up Arch Linux for Raspberry Pi. <br>
+This is a script I use for quickly setting up Arch Linux for Raspberry Pi. <br>
 `install.pl` partitions & formats a micro-SD card, 
 then installs the latest version of Arch Linux ARM on it. <br>
 
