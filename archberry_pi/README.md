@@ -16,25 +16,25 @@ Do not use this script as-is if `mmcblk0` is assigned to a different device.
 2. Using `lsblk`, ensure that the device name is `/dev/mmcblk0`.
 3. Run the install script with `sudo`: 
 ```
-$ sudo wget -qO - "https://github.com/j-stach/scripts/archberry_pi/install.pl" | perl
+sudo wget -qO - "https://github.com/j-stach/scripts/archberry_pi/install.pl" | perl
 ```
 4. Then pull the SD card and insert it into the Pi.
 5. Connect the Pi to internet via ethernet cable, connect to power, then boot. 
-The default Arch ARM user is 'alarm' (Arch Linux ARM) and the password is 'alarm'.
-The default root password is 'root'.
+The default Arch ARM user is `alarm` (Arch Linux ARM) and the password is `alarm`.
+The default root password is `root`.
 6. The first time you log in, run the following commands as root:
 ```
-# pacman-key --init
-# pacman-key --populate archlinuxarm
-# pacman -R linux-aarch64 uboot-raspberrypi
-# pacman -Syu --overwrite "/boot/*" linux-rpi
-# timedatectl set-timezone YourRegion/YourZone
-# mkinitcpio -P
-# reboot
+pacman-key --init
+pacman-key --populate archlinuxarm
+pacman -R linux-aarch64 uboot-raspberrypi
+pacman -Syu --overwrite "/boot/*" linux-rpi
+timedatectl set-timezone YourRegion/YourZone
+mkinitcpio -P
+reboot
 ```
 7. Boot again, and open `/etc/locale.gen` in your preferred text editor. 
-Uncomment your UTF zones, then run `# locale-gen`.
-8. Configure the rest as needed. Remember to change your root password with `# passwd` 
+Uncomment your UTF zones, then run `locale-gen`.
+8. Configure the rest as needed. Remember to change your root password with `passwd` 
 and to set up a firewall if you are connecting to a network. Enjoy!
 
 ## Resources
